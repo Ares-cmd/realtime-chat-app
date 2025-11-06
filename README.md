@@ -133,26 +133,53 @@ git clone https://github.com/Ares-cmd/realtime-chat-app.git
 cd realtime-chat-app
 ```
 
-### Backend Setup
+### Quick Start with Docker (Recommended)
 ```bash
-cd server
+# Start all services (Backend, Frontend, MongoDB, Redis)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+The backend API will be available at `http://localhost:5000`
+The frontend will be available at `http://localhost:3000`
+
+### Manual Setup
+
+#### Backend Setup
+```bash
+# Install dependencies
 npm install
-cp .env.example .env
+
 # Configure environment variables
+# Create .env file with:
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/chatapp
+REDIS_URL=redis://localhost:6379
+JWT_SECRET=your_secret_key_here
+JWT_EXPIRE=7d
+
+# Start backend
 npm run dev
 ```
 
-### Frontend Setup
+#### Frontend Setup
 ```bash
+# Navigate to client directory
 cd client
+
+# Install dependencies
 npm install
-npm start
+
+# Start frontend
+npm run dev
 ```
 
-### Docker Setup
-```bash
-docker-compose up -d
-```
+The frontend will run on `http://localhost:3000` and automatically proxy API requests to `http://localhost:5000`
 
 ## ⚙️ Environment Variables
 
