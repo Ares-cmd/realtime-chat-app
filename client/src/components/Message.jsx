@@ -20,7 +20,7 @@ const Message = ({ message, isOwn, onDelete }) => {
     >
       {!isOwn && (
         <div className="message-sender">
-          {message.sender?.username || 'Unknown'}
+          {message.sender?.name || 'Unknown'}
         </div>
       )}
       

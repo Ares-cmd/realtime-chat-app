@@ -65,35 +65,22 @@ module.exports = (io) => {
       }
     });
 
-    // Send message
+    // Broadcast message (message already created via HTTP API)
     socket.on('send_message', async (data) => {
       try {
-        const { chatId, content, type, fileUrl, fileName, fileSize } = data;
+        const { chatId, messageId } = data;
 
-        // Create message
-        const message = await Message.create({
-          chat: chatId,
-          sender: socket.user._id,
-          content,
-          type: type || 'text',
-          fileUrl,
-          fileName,
-          fileSize
-        });
-
-        // Update chat's last message
-        await Chat.findByIdAndUpdate(chatId, {
-          lastMessage: message._id
-        });
-
-        const populatedMessage = await Message.findById(message._id)
+        // Fetch the already-created message and broadcast it
+        const populatedMessage = await Message.findById(messageId)
           .populate('sender', 'name avatar email');
 
-        // Emit to all users in the chat room
-        io.to(chatId).emit('new_message', populatedMessage);
+        if (populatedMessage) {
+          // Emit to all users in the chat room
+          io.to(chatId).emit('new_message', populatedMessage);
+        }
 
       } catch (error) {
-        socket.emit('error', { message: 'Error sending message' });
+        socket.emit('error', { message: 'Error broadcasting message' });
       }
     });
 

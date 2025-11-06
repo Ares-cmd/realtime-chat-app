@@ -27,9 +27,9 @@ const Header = () => {
               onClick={() => setShowMenu(!showMenu)}
             >
               <div className="user-avatar">
-                {user?.username?.charAt(0).toUpperCase()}
+                {user?.name?.charAt(0).toUpperCase() || '?'}
               </div>
-              <span className="user-name">{user?.username}</span>
+              <span className="user-name">{user?.name || 'User'}</span>
             </button>
             
             {showMenu && (

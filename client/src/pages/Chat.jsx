@@ -64,8 +64,8 @@ const Chat = () => {
   const handleNewChat = async (userId) => {
     try {
       const response = await axios.post('/api/chats', {
-        type: 'private',
-        members: [userId],
+        participantIds: [userId],
+        isGroupChat: false,
       });
       const newChat = response.data.data;
       setChats([newChat, ...chats]);

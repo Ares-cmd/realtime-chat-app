@@ -30,30 +30,32 @@ const ChatList = ({ chats, selectedChat, onSelectChat, onNewChat, loading }) => 
     }
   };
 
+  const getChatName = (chat) => {
+    if (chat.isGroupChat) {
+      return chat.name;
+    }
+    const otherMember = chat.participants?.find((m) => m._id !== user._id);
+    return otherMember?.name || 'Unknown';
+  };
+
+
   const filteredChats = chats.filter((chat) => {
     const chatName = getChatName(chat);
     return chatName.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
-  const getChatName = (chat) => {
-    if (chat.type === 'group') {
-      return chat.name;
-    }
-    const otherMember = chat.members.find((m) => m._id !== user._id);
-    return otherMember?.username || 'Unknown';
-  };
 
   const getChatAvatar = (chat) => {
-    if (chat.type === 'group') {
-      return chat.name.charAt(0).toUpperCase();
+    if (chat.isGroupChat) {
+      return chat.name?.charAt(0).toUpperCase() || 'G';
     }
-    const otherMember = chat.members.find((m) => m._id !== user._id);
-    return otherMember?.username?.charAt(0).toUpperCase() || '?';
+    const otherMember = chat.participants?.find((m) => m._id !== user._id);
+    return otherMember?.name?.charAt(0).toUpperCase() || '?';
   };
 
   const isUserOnline = (chat) => {
-    if (chat.type === 'group') return false;
-    const otherMember = chat.members.find((m) => m._id !== user._id);
+    if (chat.isGroupChat) return false;
+    const otherMember = chat.participants?.find((m) => m._id !== user._id);
     return onlineUsers.includes(otherMember?._id);
   };
 
@@ -107,10 +109,10 @@ const ChatList = ({ chats, selectedChat, onSelectChat, onNewChat, loading }) => 
                 onClick={() => handleUserClick(u._id)}
               >
                 <div className="user-avatar">
-                  {u.username.charAt(0).toUpperCase()}
+                  {u.name?.charAt(0).toUpperCase() || '?'}
                 </div>
                 <div className="user-info">
-                  <div className="user-name">{u.username}</div>
+                  <div className="user-name">{u.name || 'Unknown'}</div>
                   <div className="user-email">{u.email}</div>
                 </div>
               </div>

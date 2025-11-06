@@ -4,9 +4,15 @@ let redisClient;
 
 const connectRedis = async () => {
   try {
+    const redisHost = process.env.REDIS_HOST || 'localhost';
+    const redisPort = process.env.REDIS_PORT || 6379;
+    const redisUrl = `redis://${redisHost}:${redisPort}`;
+    
     redisClient = redis.createClient({
-      host: process.env.REDIS_HOST || 'localhost',
-      port: process.env.REDIS_PORT || 6379,
+      url: redisUrl,
+      socket: {
+        family: 4, // Force IPv4
+      },
       password: process.env.REDIS_PASSWORD || undefined,
     });
 

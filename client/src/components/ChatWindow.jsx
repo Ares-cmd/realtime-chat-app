@@ -139,14 +139,14 @@ const ChatWindow = ({ chat, onChatUpdate }) => {
 
   const getChatName = () => {
     if (!chat) return '';
-    if (chat.type === 'group') return chat.name;
-    const otherMember = chat.members.find((m) => m._id !== user._id);
-    return otherMember?.username || 'Unknown';
+    if (chat.isGroupChat) return chat.name;
+    const otherMember = chat.participants?.find((m) => m._id !== user._id);
+    return otherMember?.name || 'Unknown';
   };
 
   const isUserOnline = () => {
-    if (!chat || chat.type === 'group') return false;
-    const otherMember = chat.members.find((m) => m._id !== user._id);
+    if (!chat || chat.isGroupChat) return false;
+    const otherMember = chat.participants?.find((m) => m._id !== user._id);
     return onlineUsers.includes(otherMember?._id);
   };
 
